@@ -33,7 +33,7 @@ def get_all_restaurants():
     
     try:
 
-        return jsonify([restaurant.to_dict(rules= ('restaurant_pizzas',)) for restaurant in all_restaurants]), 200
+        return jsonify([restaurant.to_dict(rules= ('-restaurant_pizzas',)) for restaurant in all_restaurants]), 200
     
     except Exception as e:
         print(f"Error retrieving restaurants: {e}")
@@ -48,7 +48,7 @@ def get_restaurant_by_id(id):
     if found_restaurant:
         return found_restaurant.to_dict(), 200
     else:
-        return {"message": "Restaurant not found", "status": "404"}, 404
+        return {"error": "Restaurant not found", "status": "404"}, 404
 
 @app.delete("/restaurants/<int:id>")
 def delete_restaurants_by_id(id):
@@ -61,7 +61,7 @@ def delete_restaurants_by_id(id):
         return { "message": "successfull Deletion" },204
 
     else:
-        return {"status": 404, "message":"Restaurant not found" }, 404
+        return {"status": 404, "error":"Restaurant not found" }, 404
 
 
 @app.get("/pizzas")
@@ -70,7 +70,7 @@ def get_pizzas():
 
     try:
 
-        return jsonify([pizza.to_dict(rules=('restaurant_pizzas') ) for pizza in all_pizzas]), 200
+        return jsonify([pizza.to_dict(rules=('-restaurant_pizzas',) ) for pizza in all_pizzas]), 200
     
     except Exception as e:
         print(f"Error retrieving restaurants: {e}")
@@ -94,7 +94,7 @@ def post_restaurants_pizzas():
     
     
     except Exception as validation_error:
-        return {
+        return {'errors': ['validation errors'],
             "status": "400",
             "message": "something went wrong",
             "error_text": str(validation_error)
